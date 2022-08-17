@@ -1,52 +1,42 @@
-#another
-import numpy as np
 import cv2
-import glob
-import imutils
-import matplotlib.pyplot as plt
-import os
+import numpy as np
 
-os.chdir(os.path.dirname(os.path.abspath(__file__)))
-image_paths = glob.glob('unstitched/*.jpg')
-images=[]
+im1=cv2.imread('im0.png')
+im2=cv2.imread('im1.png')
+img1=cv2.cvtColor(im1, cv2.COLOR_BGR2GRAY)
+img2=cv2.cvtColor(im2, cv2.COLOR_BGR2GRAY)
 
-for image in image_paths:
-    img=cv2.imread(image)
-    images.append(img)
-    #cv2.imshow("Image", img)
-    #cv2.waitKey(0)
+orb=cv2.ORB_create(50)
+kp1, des1= orb.detectAndCompute(img1, None)
+kp2, des2=orb.detectAndCompute(img2, None)
 
-imageStitcher=cv2.Stitcher_create()
-error = cv2.Stitcher_create()
+#takes descriptor in first set and matches it with all other features in
+#second set
+matcher=cv2.DescriptorMatcher_create(cv2.DESCRIPTOR_MATCHER_BRUTEFORCE_HAMMING)
 
-error, stitched_img=imageStitcher.stitch(images)
+matches=matcher.match(des1,des2,None)
 
-if not error:
-    cv2.imwrite("StitchedOutput.png", stitched_img)
-    cv2.imshow("StitchedImage", stitched_img)
-    cv2.waitKey(0)
+#i'm sorting the keypoints extracted
+matches=sorted(matches,key=lambda x:x.distance )
 
+#preprocessing homography by RANSAC
+points1=np.zeros((len(matches),2),dtype=np.float32)
+points2=np.zeros((len(matches),2),dtype=np.float32)
 
+for i,match in enumerate(matches):
+    points1[i,:]=kp1[match.queryIdx].pt
+    points2[i,:]=kp2[match.trainIdx].pt
 
-main_image=cv2.imread('StitchedOutput.jpg', cv2.IMREAD_UNCHANGED)
-grey_img=cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
+h,mask=cv2.findHomography(points1, points2, cv2.RANSAC)
 
-template =cv2.imread('SeaStar.jpg',0)
-SeaStar=cv2.imread('SeaStar.jpg', cv2.IMREAD_UNCHANGED)
-result=cv2.matchTemplate(grey_img, template, cv2.TM_CCORR_NORMED)
+#homography
+height, width, channels=im2.shape
+im1Reg=cv2.warpPerspective(im1, h, (width,height))
 
-cv2.imshow("res", result)
+#img3=cv2.drawKeypoints(img1, kp1, None, flags=None)
+img3=cv2.drawMatches(im2, kp1, im2, kp2, matches[:10], None)
 
-threshold=0.99
-locations=np.where(result>=threshold)
+cv2.imshow("keypoint matches",img3)
+#cv2.imshow("Registered image", im1Reg)
 
-locations=list(zip(*locations[::-1]))
-
-print(locations)
-
-for loc in locations:
-    cv2.rectangle(img, loc, (loc[0]+w, loc[1]+h),(0,0,255),2)
-    cv2.imshow('all matches', main_image)
-    cv2.waitKey()
-#else:
-#   print('not found')
+cv2.waitKey(0)
