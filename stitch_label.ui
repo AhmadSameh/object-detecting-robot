@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Stitch</class>
+ <widget class="QDialog" name="Stitch">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>981</width>
+    <height>531</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Stitcher</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">QDialog{
+	background-color: #00365f;
+}</string>
+  </property>
+  <widget class="QLabel" name="Stitched">
+   <property name="geometry">
+    <rect>
+     <x>360</x>
+     <y>20</y>
+     <width>601</width>
+     <height>491</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QLabel{
+	border-radius: 20px;
+	border: 5px solid #ffbe00;
+}</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="Img1Btn">
+   <property name="geometry">
+    <rect>
+     <x>60</x>
+     <y>40</y>
+     <width>131</width>
+     <height>71</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QPushButton{
+	background-color: #ffbe00;
+	border-radius: 30px;
+	color: #00365f;
+}</string>
+   </property>
+   <property name="text">
+    <string>Select File!</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="Img2Btn">
+   <property name="geometry">
+    <rect>
+     <x>60</x>
+     <y>140</y>
+     <width>131</width>
+     <height>71</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QPushButton{
+	background-color: #ffbe00;
+	border-radius: 30px;
+	color: #00365f;
+}</string>
+   </property>
+   <property name="text">
+    <string>Select File!</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="Img3Btn">
+   <property name="geometry">
+    <rect>
+     <x>60</x>
+     <y>230</y>
+     <width>131</width>
+     <height>71</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QPushButton{
+	background-color: #ffbe00;
+	border-radius: 30px;
+	color: #00365f;
+}</string>
+   </property>
+   <property name="text">
+    <string>Select File!</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="Img4Btn">
+   <property name="geometry">
+    <rect>
+     <x>60</x>
+     <y>320</y>
+     <width>131</width>
+     <height>71</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QPushButton{
+	background-color: #ffbe00;
+	border-radius: 30px;
+	color: #00365f;
+}</string>
+   </property>
+   <property name="text">
+    <string>Select File!</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="Img5Btn">
+   <property name="geometry">
+    <rect>
+     <x>60</x>
+     <y>410</y>
+     <width>131</width>
+     <height>71</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QPushButton{
+	background-color: #ffbe00;
+	border-radius: 30px;
+	color: #00365f;
+}</string>
+   </property>
+   <property name="text">
+    <string>Select File!</string>
+   </property>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

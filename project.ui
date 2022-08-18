@@ -23,9 +23,9 @@
     <property name="geometry">
      <rect>
       <x>390</x>
-      <y>20</y>
+      <y>10</y>
       <width>601</width>
-      <height>601</height>
+      <height>491</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -569,6 +569,68 @@ QFrame:hover{
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="StchBtn">
+    <property name="geometry">
+     <rect>
+      <x>490</x>
+      <y>530</y>
+      <width>171</width>
+      <height>81</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>14</pointsize>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton{
+	background-color: #ffbe00;
+	border-radius: 30px;
+	color: #00365f;
+}</string>
+    </property>
+    <property name="text">
+     <string>Stitching</string>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>60</width>
+      <height>60</height>
+     </size>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="CapBtn_3">
+    <property name="geometry">
+     <rect>
+      <x>760</x>
+      <y>530</y>
+      <width>171</width>
+      <height>81</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>14</pointsize>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton{
+	background-color: #ffbe00;
+	border-radius: 30px;
+	color: #00365f;
+}</string>
+    </property>
+    <property name="text">
+     <string>Stereo Vision</string>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>60</width>
+      <height>60</height>
+     </size>
     </property>
    </widget>
   </widget>
