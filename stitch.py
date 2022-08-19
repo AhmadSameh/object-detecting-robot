@@ -1,11 +1,51 @@
 #another
-from ast import main
 import numpy as np
 import cv2 as cv
-import glob
-import imutils
-import matplotlib.pyplot as plt
-import os
+
+def detect(img):
+    image = cv.cvtColor(img, cv.COLOR_BGR2HSV)
+    
+    lower = np.array([15, 150, 20])
+    higher = np.array([35, 255, 255])
+    mask = cv.inRange(image, lower, higher)
+    contours, _ = cv.findContours(mask, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
+    for contour in contours:
+        if cv.contourArea(contour) > 2500:
+            x, y, w, h = cv.boundingRect(contour)
+            cv.putText(img, "CORAL FRAGMENT", (x, y), cv.QT_FONT_NORMAL, 3, 0)
+            cv.rectangle(img, (x,y), (x+w, y+h), (0, 0, 255), 3)
+
+    lower = np.array([110, 90, 20])
+    higher = np.array([140, 255, 255])
+    mask = cv.inRange(image, lower, higher)
+    contours, _ = cv.findContours(mask, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
+    for contour in contours:
+        if cv.contourArea(contour) > 4000:
+            x, y, w, h = cv.boundingRect(contour)
+            cv.putText(img, "SEA STAR", (x, y), cv.QT_FONT_NORMAL, 3, 0)
+            cv.rectangle(img, (x,y), (x+w, y+h), (0, 0, 255), 3)
+
+    lower = np.array([150, 100, 20])
+    higher = np.array([170, 255, 255])
+    mask = cv.inRange(image, lower, higher)
+    contours, _ = cv.findContours(mask, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
+    for contour in contours:
+        if cv.contourArea(contour) > 3000:
+            x, y, w, h = cv.boundingRect(contour)
+            cv.putText(img, "CORAL COLONY", (x, y), cv.QT_FONT_NORMAL, 3, 0)
+            cv.rectangle(img, (x,y), (x+w, y+h), (0, 0, 255), 3)
+
+    lower = np.array([100, 0, 20])
+    higher = np.array([130, 50, 255])
+    mask = cv.inRange(image, lower, higher)
+    contours, _ = cv.findContours(mask, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
+    for contour in contours:
+        if cv.contourArea(contour) > 3000:
+            x, y, w, h = cv.boundingRect(contour)
+            cv.putText(img, "SPONGE", (x, y), cv.QT_FONT_NORMAL, 3, 0)
+            cv.rectangle(img, (x,y), (x+w, y+h), (0, 0, 255), 3)
+    
+    return img
 
 def stitch_images(image_paths):
 
@@ -15,37 +55,7 @@ def stitch_images(image_paths):
         images.append(img)
     imageStitcher=cv.Stitcher_create()
     error, stitched_img=imageStitcher.stitch(images)
-    stitched_img = cv.resize(stitched_img, (600, 500), interpolation=cv.INTER_AREA)
+    final = detect(stitched_img)
+    final = cv.resize(final, (600, 500), interpolation=cv.INTER_AREA)
     if not error:
-        return stitched_img
-
-# main_image=cv.imread('StitchedOutput.jpg', cv.IMREAD_UNCHANGED)
-# gray_image = cv.cvtColor(main_image, cv.COLOR_BGR2GRAY)
-# haar_cascade = cv.CascadeClassifier('cascade.xml')
-# faces_rect = haar_cascade.detectMultiScale(gray_image, 1.1, 9, None)
-# for (x,y,w,h) in faces_rect:
-#     cv.rectangle(main_image, (x,y), (x+w, y+h), (0,255,0), 2)
-    
-# cv.imwrite('test.jpg', main_image)
-
-
-
-# template =cv.imread('SeaStar.jpg',0)
-# SeaStar=cv.imread('SeaStar.jpg', cv.IMREAD_UNCHANGED)
-# result=cv.matchTemplate(grey_img, template, cv.TM_CCORR_NORMED)
-
-# cv.imshow("res", result)
-
-# threshold=0.99
-# locations=np.where(result>=threshold)
-
-# locations=list(zip(*locations[::-1]))
-
-# print(locations)
-
-# for loc in locations:
-#     cv.rectangle(img, loc, (loc[0]+w, loc[1]+h),(0,0,255),2)
-#     cv.imshow('all matches', main_image)
-#     cv.waitKey()
-#else:
-#   print('not found')
+        return final
