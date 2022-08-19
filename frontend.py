@@ -220,7 +220,7 @@ class Ui_MainWindow(object):
 "}")
         self.CapBtn.setText("")
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap("C:/Users/ahmad/.designer/backup/capture.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap("capture.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.CapBtn.setIcon(icon)
         self.CapBtn.setIconSize(QtCore.QSize(60, 60))
         self.CapBtn.setObjectName("CapBtn")

@@ -26,7 +26,7 @@ class Interface(QMainWindow):
     def connection(self):
         arduino = serial.Serial(port='COM17', baudrate=9600, timeout=.1)
         while self.threadOn:
-            if 1:
+            if arduino.isOpen():
                 if keyboard.is_pressed("w") and keyboard.is_pressed("a"):
                     arduino.write(bytes("wa\n", encoding='utf-8'))
                     print("wa")
@@ -56,7 +56,6 @@ class Interface(QMainWindow):
                     #self.stop_move_car(self.on_color)
                     print("n")
                 
-        
     def display_image(self, img, window=1):
         qformat = QImage.Format_Indexed8
         if len(img.shape) == 3:
@@ -146,7 +145,7 @@ class Interface(QMainWindow):
         """
         newStyleSheet = styleSheet.replace("{COLOR}", color)
         self.ui.Center.setStyleSheet(newStyleSheet)
-        
+
     def closeEvent(self, event):
         self.threadOn = False
         self.thread.join()

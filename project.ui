@@ -463,7 +463,7 @@ background-color: qconicalgradient(cx:0.5, cy:0.5, angle:315, stop:0.749 rgba(0,
     </property>
     <property name="icon">
      <iconset>
-      <normaloff>C:/Users/ahmad/.designer/backup/capture.png</normaloff>C:/Users/ahmad/.designer/backup/capture.png</iconset>
+      <normaloff>capture.png</normaloff>capture.png</iconset>
     </property>
     <property name="iconSize">
      <size>
