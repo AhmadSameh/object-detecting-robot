@@ -20,39 +20,39 @@ class Interface(QMainWindow):
         self.on_color = 'rgba( 9, 237, 235, 255)'
         self.off_color = 'rgba(0, 88, 174, 255)'
         self.thread = threading.Thread(target=self.connection)
-        #self.thread.start()
+        self.threadOn = True
+        self.thread.start()
         
     def connection(self):
-        print('TEST')
-        arduino = serial.Serial(port='COM17', baudrate=9600, timeout=.1)
-        while True:
-            if arduino.isOpen():
+        #arduino = serial.Serial(port='COM17', baudrate=9600, timeout=.1)
+        while self.threadOn:
+            if 1:
                 if keyboard.is_pressed("w") and keyboard.is_pressed("a"):
-                    arduino.write(bytes("wa\n", encoding='utf-8'))
+                    #arduino.write(bytes("wa\n", encoding='utf-8'))
                     print("wa")
                 elif keyboard.is_pressed("s") and keyboard.is_pressed("a"):
-                    arduino.write(bytes("sa\n", encoding='utf-8'))
+                    #arduino.write(bytes("sa\n", encoding='utf-8'))
                     print("sa")
                 elif keyboard.is_pressed("w") and keyboard.is_pressed("d"):
-                    arduino.write(bytes("wd\n", encoding='utf-8'))
+                    #arduino.write(bytes("wd\n", encoding='utf-8'))
                     print("wd")
                 elif keyboard.is_pressed("s") and keyboard.is_pressed("d"):
-                    arduino.write(bytes("sd\n", encoding='utf-8'))
+                    #arduino.write(bytes("sd\n", encoding='utf-8'))
                     print("sd")
                 elif keyboard.is_pressed("w"):
-                    arduino.write(bytes("w\n", encoding='utf-8'))
+                    #arduino.write(bytes("w\n", encoding='utf-8'))
                     print("w")
                 elif keyboard.is_pressed("s"):
-                    arduino.write(bytes("s\n", encoding='utf-8'))
+                    #arduino.write(bytes("s\n", encoding='utf-8'))
                     print("s")
                 elif keyboard.is_pressed("a"):
-                    arduino.write(bytes("a\n", encoding='utf-8'))
+                    #arduino.write(bytes("a\n", encoding='utf-8'))
                     print("a")
                 elif keyboard.is_pressed("d"):
-                    arduino.write(bytes("d\n", encoding='utf-8'))
+                    #arduino.write(bytes("d\n", encoding='utf-8'))
                     print("d")
                 else:
-                    arduino.write(bytes("n\n", encoding='utf-8'))
+                    #arduino.write(bytes("n\n", encoding='utf-8'))
                     #self.stop_move_car(self.on_color)
                     print("n")
                 
@@ -146,7 +146,12 @@ class Interface(QMainWindow):
         """
         newStyleSheet = styleSheet.replace("{COLOR}", color)
         self.ui.Center.setStyleSheet(newStyleSheet)
-            
+        
+    def closeEvent(self, event):
+        self.threadOn = False
+        self.thread.join()
+        event.accept()
+        sys.exit()
     
 class StitchDlg(QDialog):
     def __init__(self, parent = None):
@@ -188,6 +193,5 @@ if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
     interface = Interface()
     interface.show()
-    interface.thread.start()
     interface.capture_video()
     sys.exit(app.exec_())

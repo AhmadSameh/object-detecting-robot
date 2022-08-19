@@ -21,7 +21,7 @@ class Ui_MainWindow(object):
 "}")
         self.centralwidget.setObjectName("centralwidget")
         self.Cam = QtWidgets.QLabel(self.centralwidget)
-        self.Cam.setGeometry(QtCore.QRect(380, 0, 601, 491))
+        self.Cam.setGeometry(QtCore.QRect(380, 20, 601, 491))
         self.Cam.setStyleSheet("QLabel{\n"
 "    border-radius: 20px;\n"
 "    border: 5px solid #ffbe00;\n"
