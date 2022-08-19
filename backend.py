@@ -26,7 +26,7 @@ class Interface(QMainWindow):
         print('TEST')
         arduino = serial.Serial(port='COM17', baudrate=9600, timeout=.1)
         while True:
-            if 1:
+            if arduino.isOpen():
                 if keyboard.is_pressed("w") and keyboard.is_pressed("a"):
                     arduino.write(bytes("wa\n", encoding='utf-8'))
                     print("wa")
