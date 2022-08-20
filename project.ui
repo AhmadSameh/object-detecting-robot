@@ -272,10 +272,7 @@ QFrame:hover{
 	border: none;
 	border-radius: 30px;
 }
-
-QFrame:hover{
-	background-color: #09edeb;
-}</string>
+</string>
      </property>
      <property name="frameShape">
       <enum>QFrame::StyledPanel</enum>
@@ -298,10 +295,7 @@ QFrame:hover{
 background-color: qconicalgradient(cx:0.3, cy:0.1, angle:135, stop:0.499 rgba(0, 0, 0, 0), stop:0.5 rgba(0, 88, 174, 255));
 	border: none;
 }
-
-QFrame:hover{
-	background-color: qconicalgradient(cx:0.3, cy:0.1, angle:135, stop:0.499 rgba(0, 0, 0, 0), stop:0.5 rgba( 9, 237, 235, 255));
-}</string>
+</string>
      </property>
      <property name="frameShape">
       <enum>QFrame::StyledPanel</enum>

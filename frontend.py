@@ -138,10 +138,7 @@ class Ui_MainWindow(object):
 "    border: none;\n"
 "    border-radius: 30px;\n"
 "}\n"
-"\n"
-"QFrame:hover{\n"
-"    background-color: #09edeb;\n"
-"}")
+"")
         self.Center.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.Center.setFrameShadow(QtWidgets.QFrame.Raised)
         self.Center.setObjectName("Center")
@@ -151,10 +148,7 @@ class Ui_MainWindow(object):
 "background-color: qconicalgradient(cx:0.3, cy:0.1, angle:135, stop:0.499 rgba(0, 0, 0, 0), stop:0.5 rgba(0, 88, 174, 255));\n"
 "    border: none;\n"
 "}\n"
-"\n"
-"QFrame:hover{\n"
-"    background-color: qconicalgradient(cx:0.3, cy:0.1, angle:135, stop:0.499 rgba(0, 0, 0, 0), stop:0.5 rgba( 9, 237, 235, 255));\n"
-"}")
+"")
         self.UpperRight.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.UpperRight.setFrameShadow(QtWidgets.QFrame.Raised)
         self.UpperRight.setObjectName("UpperRight")

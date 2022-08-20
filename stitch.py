@@ -1,4 +1,3 @@
-#another
 import numpy as np
 import cv2 as cv
 
@@ -48,7 +47,6 @@ def detect(img):
     return img
 
 def stitch_images(image_paths):
-
     images = []
     for image in image_paths:
         img=cv.imread(image)
