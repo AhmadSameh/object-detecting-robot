@@ -29,48 +29,50 @@ class Interface(QMainWindow):
         self.thread.update_direction.connect(self.move)        
 
     def move2(self):
-        arduino = serial.Serial(port='COM17', baudrate=9600, timeout=.1)
+        #arduino = serial.Serial(port='COM17', baudrate=9600, timeout=.1)
         while True:
-            if arduino.isOpen():
+            if 1:
+                self.connected = True
                 if keyboard.is_pressed("w") and keyboard.is_pressed("a"):
-                    arduino.write(bytes("wa\n", encoding='utf-8'))
+                    #arduino.write(bytes("wa\n", encoding='utf-8'))
                     self.thread.direction = 'wa'
                     self.thread.start()
                 elif keyboard.is_pressed("s") and keyboard.is_pressed("a"):
-                    arduino.write(bytes("sa\n", encoding='utf-8'))
+                    #arduino.write(bytes("sa\n", encoding='utf-8'))
                     self.thread.direction = 'sa'
                     self.thread.start()
                 elif keyboard.is_pressed("w") and keyboard.is_pressed("d"):
-                    arduino.write(bytes("wd\n", encoding='utf-8'))
+                    #arduino.write(bytes("wd\n", encoding='utf-8'))
                     self.thread.direction = 'wd'
                     self.thread.start()
                 elif keyboard.is_pressed("s") and keyboard.is_pressed("d"):
-                    arduino.write(bytes("sd\n", encoding='utf-8'))
+                    #arduino.write(bytes("sd\n", encoding='utf-8'))
                     self.thread.direction = 'sd'
                     self.thread.start()
                 elif keyboard.is_pressed("w"):
-                    arduino.write(bytes("w\n", encoding='utf-8'))
+                    #arduino.write(bytes("w\n", encoding='utf-8'))
                     self.thread.direction = 'w'
                     self.thread.start()
                 elif keyboard.is_pressed("s"):
-                    arduino.write(bytes("s\n", encoding='utf-8'))
+                    #arduino.write(bytes("s\n", encoding='utf-8'))
                     self.thread.direction = 's'
                     self.thread.start()
                 elif keyboard.is_pressed("a"):
-                    arduino.write(bytes("a\n", encoding='utf-8'))
+                    #arduino.write(bytes("a\n", encoding='utf-8'))
                     self.thread.direction = 'a'
                     self.thread.start()
                 elif keyboard.is_pressed("d"):
-                    arduino.write(bytes("d\n", encoding='utf-8'))
+                    #arduino.write(bytes("d\n", encoding='utf-8'))
                     self.thread.direction = 'd'
                     self.thread.start()
                 else:
-                    arduino.write(bytes("n\n", encoding='utf-8'))
+                    #arduino.write(bytes("n\n", encoding='utf-8'))
                     self.thread.direction = 'n'
                     self.thread.start()
 
     @QtCore.pyqtSlot(str)
     def move(self, direction):
+        self.indicate_connection()
         self.stop_move_car(self.off_color)
         self.forward_left_movement(self.off_color)
         self.forward_right_movement(self.off_color)
@@ -224,6 +226,20 @@ class Interface(QMainWindow):
         self.thread.join()
         event.accept()
         sys.exit()
+    
+    def indicate_connection(self):
+        styleSheet = """
+        QFrame{
+	        background-color: {COLOR};
+	        border-radius: 40px;
+	        border: 3px solid #ffbe00
+        }
+        """
+        color = 'red'
+        newStyleSheet = styleSheet.replace("{COLOR}", color)
+        self.ui.OnOff.setStyleSheet(newStyleSheet)
+        
+    
     
 class StitchDlg(QDialog):
     def __init__(self, parent = None):
