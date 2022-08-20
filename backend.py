@@ -19,6 +19,7 @@ class Interface(QMainWindow):
         self.ui.setupUi(self)
         self.capture = False
         self.update2 = pyqtSignal(str)
+        self.speed = 1
         self.ui.StchBtn.clicked.connect(self.show_stitched)
         self.on_color = 'rgba( 9, 237, 235, 255)'
         self.off_color = 'rgba(0, 88, 174, 255)'
@@ -29,50 +30,61 @@ class Interface(QMainWindow):
         self.thread.update_direction.connect(self.move)        
 
     def move2(self):
-        #arduino = serial.Serial(port='COM17', baudrate=9600, timeout=.1)
+        arduino = serial.Serial(port='COM17', baudrate=9600, timeout=.1)
         while True:
-            if 1:
-                self.connected = True
+            if arduino.isOpen():
+                
+                '''AHMAD, ADD THE SPEED SENDING COMMAND HERE'''
+                
+                if keyboard.is_pressed('up'):
+                    self.speed += 1
+                    self.speed = 3 if self.speed > 3 else self.speed
+                    time.sleep(0.25)
+                if keyboard.is_pressed('down'):
+                    self.speed -= 1
+                    self.speed = 1 if self.speed < 1 else self.speed
+                    time.sleep(0.25)
                 if keyboard.is_pressed("w") and keyboard.is_pressed("a"):
-                    #arduino.write(bytes("wa\n", encoding='utf-8'))
+                    arduino.write(bytes("wa\n", encoding='utf-8'))
                     self.thread.direction = 'wa'
                     self.thread.start()
                 elif keyboard.is_pressed("s") and keyboard.is_pressed("a"):
-                    #arduino.write(bytes("sa\n", encoding='utf-8'))
+                    arduino.write(bytes("sa\n", encoding='utf-8'))
                     self.thread.direction = 'sa'
                     self.thread.start()
                 elif keyboard.is_pressed("w") and keyboard.is_pressed("d"):
-                    #arduino.write(bytes("wd\n", encoding='utf-8'))
+                    arduino.write(bytes("wd\n", encoding='utf-8'))
                     self.thread.direction = 'wd'
                     self.thread.start()
                 elif keyboard.is_pressed("s") and keyboard.is_pressed("d"):
-                    #arduino.write(bytes("sd\n", encoding='utf-8'))
+                    arduino.write(bytes("sd\n", encoding='utf-8'))
                     self.thread.direction = 'sd'
                     self.thread.start()
                 elif keyboard.is_pressed("w"):
-                    #arduino.write(bytes("w\n", encoding='utf-8'))
+                    arduino.write(bytes("w\n", encoding='utf-8'))
                     self.thread.direction = 'w'
                     self.thread.start()
                 elif keyboard.is_pressed("s"):
-                    #arduino.write(bytes("s\n", encoding='utf-8'))
+                    arduino.write(bytes("s\n", encoding='utf-8'))
                     self.thread.direction = 's'
                     self.thread.start()
                 elif keyboard.is_pressed("a"):
-                    #arduino.write(bytes("a\n", encoding='utf-8'))
+                    arduino.write(bytes("a\n", encoding='utf-8'))
                     self.thread.direction = 'a'
                     self.thread.start()
                 elif keyboard.is_pressed("d"):
-                    #arduino.write(bytes("d\n", encoding='utf-8'))
+                    arduino.write(bytes("d\n", encoding='utf-8'))
                     self.thread.direction = 'd'
                     self.thread.start()
                 else:
-                    #arduino.write(bytes("n\n", encoding='utf-8'))
+                    arduino.write(bytes("n\n", encoding='utf-8'))
                     self.thread.direction = 'n'
                     self.thread.start()
 
     @QtCore.pyqtSlot(str)
     def move(self, direction):
         self.indicate_connection()
+        self.indicate_speed()
         self.stop_move_car(self.off_color)
         self.forward_left_movement(self.off_color)
         self.forward_right_movement(self.off_color)
@@ -238,8 +250,51 @@ class Interface(QMainWindow):
         color = 'red'
         newStyleSheet = styleSheet.replace("{COLOR}", color)
         self.ui.OnOff.setStyleSheet(newStyleSheet)
+
+    def indicate_speed(self):
+        self.low_speed()
+        if self.speed == 1:
+            self.mid_speed('#858517')
+            self.high_speed('#6b0000')
+        elif self.speed == 2:
+            self.mid_speed('#ffff00')
+            self.high_speed('#6b0000')
+        elif self.speed == 3:
+            self.mid_speed('#ffff00')
+            self.high_speed('red')
+            
+    def low_speed(self):
+        styleSheet = """
+        QFrame{
+	        background-color: {COLOR};
+	        border: none;
+        }
+        """
+        newStyleSheet = styleSheet.replace("{COLOR}", '#00ff00')
+        self.ui.LowSpd1.setStyleSheet(newStyleSheet)
+        self.ui.LowSpd2.setStyleSheet(newStyleSheet)
         
-    
+    def mid_speed(self, color):
+        styleSheet = """
+        QFrame{
+	        background-color: {COLOR};
+	        border: none;
+        }
+        """
+        newStyleSheet = styleSheet.replace("{COLOR}", color)
+        self.ui.MidSpd1.setStyleSheet(newStyleSheet)
+        self.ui.MidSpd2.setStyleSheet(newStyleSheet)
+        
+    def high_speed(self, color):
+        styleSheet = """
+        QFrame{
+	        background-color: {COLOR};
+	        border: none;
+        }
+        """
+        newStyleSheet = styleSheet.replace("{COLOR}", color)
+        self.ui.HiSpd1.setStyleSheet(newStyleSheet)
+        self.ui.HiSpd2.setStyleSheet(newStyleSheet)
     
 class StitchDlg(QDialog):
     def __init__(self, parent = None):

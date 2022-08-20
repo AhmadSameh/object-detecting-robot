@@ -450,6 +450,9 @@ background-color: qconicalgradient(cx:0.5, cy:0.5, angle:315, stop:0.749 rgba(0,
      <string notr="true">QPushButton{
 	background-color: #ffbe00;
 	border-radius: 30px;
+}
+QPushButton:hover{
+	background-color: #876b1a;
 }</string>
     </property>
     <property name="text">
@@ -584,6 +587,9 @@ QFrame:hover{
 	background-color: #ffbe00;
 	border-radius: 30px;
 	color: #00365f;
+}
+QPushButton:hover{
+	background-color: #876b1a;
 }</string>
     </property>
     <property name="text">
@@ -615,6 +621,9 @@ QFrame:hover{
 	background-color: #ffbe00;
 	border-radius: 30px;
 	color: #00365f;
+}
+QPushButton:hover{
+	background-color: #876b1a;
 }</string>
     </property>
     <property name="text">
