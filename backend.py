@@ -10,6 +10,7 @@ from stitch import stitch_images
 import threading
 import keyboard
 import serial
+import numpy as np
 
 class Interface(QMainWindow):
     
@@ -18,16 +19,25 @@ class Interface(QMainWindow):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
         self.capture = False
+        self.img_num = 1
         self.update2 = pyqtSignal(str)
         self.speed = 1
+        self.ui.CapBtn.clicked.connect(self.capture_frame)
         self.ui.StchBtn.clicked.connect(self.show_stitched)
         self.on_color = 'rgba( 9, 237, 235, 255)'
         self.off_color = 'rgba(0, 88, 174, 255)'
         self.thread2 = threading.Thread(target=self.move2)
         self.threadOn = True
         self.thread2.start()
-        self.thread = ThreadClass('n')
+        self.thread = Worker1('n')
         self.thread.update_direction.connect(self.move)        
+        
+        self.worker2 = Worker2()
+        self.worker2.start()
+        self.worker2.ImageUpdate.connect(self.display_image)
+        
+    def capture_frame(self):
+        self.capture = True
 
     def move2(self):
         arduino = serial.Serial(port='COM17', baudrate=9600, timeout=.1)
@@ -112,7 +122,8 @@ class Interface(QMainWindow):
             self.backward_right_movement(self.on_color)
         elif direction == 'stop':
             self.stop_move_car(self.on_color)        
-                
+    
+    @QtCore.pyqtSlot(np.ndarray)                
     def display_image(self, img, window=1):
         qformat = QImage.Format_Indexed8
         if len(img.shape) == 3:
@@ -121,7 +132,10 @@ class Interface(QMainWindow):
             else:
                 qformat = QImage.Format_RGB888
         if self.capture:
-            cv.imwrite('img.jpg', img)
+            title = 'img{NUM}.jpg'
+            title = title.replace('{NUM}', str(self.img_num))
+            cv.imwrite(title, img)
+            self.img_num += 1
             self.capture = False
         img = QImage(img, img.shape[1], img.shape[0], qformat)
         img = img.rgbSwapped()
@@ -330,10 +344,10 @@ class StitchDlg(QDialog):
                 self.display_stitched()
                 
                 
-class ThreadClass(QThread):
+class Worker1(QThread):
     update_direction = pyqtSignal(str)
     def __init__(self, direction, parent = None):
-        super(ThreadClass, self).__init__(parent)
+        super(Worker1, self).__init__(parent)
         self.direction = direction
         
     def run(self):
@@ -355,8 +369,16 @@ class ThreadClass(QThread):
             self.update_direction.emit('right')
         else:
             self.update_direction.emit('stop')
-        
-            
+
+class Worker2(QThread):
+    ImageUpdate = pyqtSignal(np.ndarray)
+    def run(self):
+        cap = cv.VideoCapture(0)
+        while cap.isOpened():
+            _, frame = cap.read()
+            self.ImageUpdate.emit(frame)
+        cap.release()
+   
 if __name__ == "__main__":
     import sys
     

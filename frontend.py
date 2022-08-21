@@ -95,7 +95,7 @@ class Ui_MainWindow(object):
 "    border: none;\n"
 "}\n"
 "QFrame:hover{\n"
-"    background-color: #04ff00;\n"
+"    background-color: #00ff00;\n"
 "}")
         self.LowSpd1.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.LowSpd1.setFrameShadow(QtWidgets.QFrame.Raised)
@@ -211,6 +211,9 @@ class Ui_MainWindow(object):
         self.CapBtn.setStyleSheet("QPushButton{\n"
 "    background-color: #ffbe00;\n"
 "    border-radius: 30px;\n"
+"}\n"
+"QPushButton:hover{\n"
+"    background-color: #876b1a;\n"
 "}")
         self.CapBtn.setText("")
         icon = QtGui.QIcon()
@@ -267,6 +270,9 @@ class Ui_MainWindow(object):
 "    background-color: #ffbe00;\n"
 "    border-radius: 30px;\n"
 "    color: #00365f;\n"
+"}\n"
+"QPushButton:hover{\n"
+"    background-color: #876b1a;\n"
 "}")
         self.StchBtn.setIconSize(QtCore.QSize(60, 60))
         self.StchBtn.setObjectName("StchBtn")
@@ -279,6 +285,9 @@ class Ui_MainWindow(object):
 "    background-color: #ffbe00;\n"
 "    border-radius: 30px;\n"
 "    color: #00365f;\n"
+"}\n"
+"QPushButton:hover{\n"
+"    background-color: #876b1a;\n"
 "}")
         self.CapBtn_3.setIconSize(QtCore.QSize(60, 60))
         self.CapBtn_3.setObjectName("CapBtn_3")

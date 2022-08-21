@@ -177,7 +177,7 @@ QFrame:hover{
 	border: none;
 }
 QFrame:hover{
-	background-color: #04ff00;
+	background-color: #00ff00;
 }</string>
      </property>
      <property name="frameShape">
