@@ -1,10 +1,11 @@
+import sys
 import cv2
 import numpy as np
 from skimage import io
 import matplotlib.pyplot as plt
 from scipy.ndimage import shift
 from matplotlib import pyplot as plt
-
+from PIL import Image as im
 im1=cv2.imread('im0.png')
 im2=cv2.imread('im1.png')
 img1=cv2.cvtColor(im1, cv2.COLOR_BGR2GRAY)
@@ -159,7 +160,58 @@ colormap = plt.get_cmap('inferno')
 heatmap = (colormap(image) * 2**16).astype(np.uint16)[:,:,:3]
 heatmap = cv2.cvtColor(heatmap, cv2.COLOR_RGB2BGR)
 
-cv2.imshow('image', image)
-cv2.imshow('heatmap', heatmap)
-cv2.imwrite("heatmap.png", heatmap)
+def stereo_match(imgL, imgR):
+    # disparity range is tuned for 'aloe' image pair
+    window_size = 15
+    min_disp = 16
+    num_disp = 96 - min_disp
+    stereo = cv2.StereoSGBM_create(minDisparity=min_disp,
+                                   numDisparities=num_disp,
+                                   blockSize=16,
+                                   P1=8 * 3 * window_size ** 2,
+                                   P2=32 * 3 * window_size ** 2,
+                                   disp12MaxDiff=1,
+                                   uniquenessRatio=10,
+                                   speckleWindowSize=150,
+                                   speckleRange=32
+                                   )
+
+    # print('computing disparity...')
+    disp = stereo.compute(imgL, imgR).astype(np.float32) / 16.0
+
+    # print('generating 3d point cloud...',)
+    h, w = imgL.shape[:2]
+    f = 0.8 * w  # guess for focal length
+    Q = np.float32([[1, 0, 0, -0.5 * w],
+                    [0, -1, 0, 0.5 * h],  # turn points 180 deg around x-axis,
+                    [0, 0, 0, -f],  # so that y-axis looks up
+                    [0, 0, 1, 0]])
+    points = cv2.reprojectImageTo3D(disp, Q)
+    colors = cv2.cvtColor(imgL, cv2.COLOR_BGR2RGB)
+    mask = disp > disp.min()
+    out_points = points[mask]
+    out_colors = colors[mask]
+    #append_ply_array(out_points, out_colors)
+
+    disparity_scaled = (disp - min_disp) / num_disp
+    disparity_scaled += abs(np.amin(disparity_scaled))
+    disparity_scaled /= np.amax(disparity_scaled)
+    disparity_scaled[disparity_scaled < 0] = 0
+    return np.array(255 * disparity_scaled, np.uint8)
+
+array=stereo_match(i1,i2)
+np.set_printoptions(threshold=sys.maxsize)
+print(array)
+#a 3d map
+data = im.fromarray(array)
+data.save('depthimage.png')
+cv2.imshow('disparityimage', image)
+cv2.imshow('heatmapdisparity', heatmap)
+cv2.imwrite("heatmapdisparity.png", heatmap)
+
+image = cv2.imread('depthimage.png', 0)
+colormap = plt.get_cmap('inferno')
+heatmapdepth = (colormap(image) * 2**16).astype(np.uint16)[:,:,:3]
+heatmapdepth = cv2.cvtColor(heatmap, cv2.COLOR_RGB2BGR)
+cv2.imshow("heatmapdepth", heatmapdepth)
 cv2.waitKey(0)
