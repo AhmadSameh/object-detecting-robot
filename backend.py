@@ -115,6 +115,7 @@ class Interface(QMainWindow):
             if len(line_split) == 2:
                 volt = line_split[0]
                 current = line_split[1]
+                print(volt," ",current)
 
     @QtCore.pyqtSlot(str)
     def move(self, direction):
