@@ -369,8 +369,7 @@ class StitchDlg(QDialog):
             self.img_locations.append(img[0])
             btn.setText('FILE SELECTED!')
             if len(self.img_locations) == 5:
-                self.display_stitched()
-                
+                self.display_stitched()           
                 
 class Worker1(QThread):
     update_direction = pyqtSignal(str)
