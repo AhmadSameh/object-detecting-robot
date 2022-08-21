@@ -12,8 +12,9 @@ import keyboard
 import serial
 import numpy as np
 
+
 class Interface(QMainWindow):
-    
+
     def __init__(self):
         super().__init__()
         self.ui = Ui_MainWindow()
@@ -30,66 +31,90 @@ class Interface(QMainWindow):
         self.threadOn = True
         self.thread2.start()
         self.thread = Worker1('n')
-        self.thread.update_direction.connect(self.move)        
-        
+        self.thread.update_direction.connect(self.move)
+
         self.worker2 = Worker2()
         self.worker2.start()
         self.worker2.ImageUpdate.connect(self.display_image)
-        
+
     def capture_frame(self):
         self.capture = True
 
     def move2(self):
         arduino = serial.Serial(port='COM17', baudrate=9600, timeout=.1)
+        volt = ""
+        current = ""
+        up_press = False
+        down_press = False
+        moving = False
         while True:
             if arduino.isOpen():
-                
-                '''AHMAD, ADD THE SPEED SENDING COMMAND HERE'''
-                
-                if keyboard.is_pressed('up'):
+                if keyboard.is_pressed('UP') and not up_press:
+                    up_press = True
                     self.speed += 1
                     self.speed = 3 if self.speed > 3 else self.speed
-                    time.sleep(0.25)
-                if keyboard.is_pressed('down'):
+                    self.thread.start()
+                    arduino.write(bytes("UP\n", encoding='utf-8'))
+                elif not keyboard.is_pressed('UP'):
+                    up_press = False
+                if keyboard.is_pressed('DOWN') and not down_press:
+                    down_press = True
                     self.speed -= 1
                     self.speed = 1 if self.speed < 1 else self.speed
-                    time.sleep(0.25)
+                    self.thread.start()
+                    arduino.write(bytes("DOWN\n", encoding='utf-8'))
+                elif not keyboard.is_pressed('down'):
+                    down_press = False
                 if keyboard.is_pressed("w") and keyboard.is_pressed("a"):
                     arduino.write(bytes("wa\n", encoding='utf-8'))
                     self.thread.direction = 'wa'
                     self.thread.start()
+                    moving = True
                 elif keyboard.is_pressed("s") and keyboard.is_pressed("a"):
                     arduino.write(bytes("sa\n", encoding='utf-8'))
                     self.thread.direction = 'sa'
                     self.thread.start()
+                    moving = True
                 elif keyboard.is_pressed("w") and keyboard.is_pressed("d"):
                     arduino.write(bytes("wd\n", encoding='utf-8'))
                     self.thread.direction = 'wd'
                     self.thread.start()
+                    moving = True
                 elif keyboard.is_pressed("s") and keyboard.is_pressed("d"):
                     arduino.write(bytes("sd\n", encoding='utf-8'))
                     self.thread.direction = 'sd'
                     self.thread.start()
+                    moving = True
                 elif keyboard.is_pressed("w"):
                     arduino.write(bytes("w\n", encoding='utf-8'))
                     self.thread.direction = 'w'
                     self.thread.start()
+                    moving = True
                 elif keyboard.is_pressed("s"):
                     arduino.write(bytes("s\n", encoding='utf-8'))
                     self.thread.direction = 's'
                     self.thread.start()
+                    moving = True
                 elif keyboard.is_pressed("a"):
                     arduino.write(bytes("a\n", encoding='utf-8'))
                     self.thread.direction = 'a'
                     self.thread.start()
+                    moving = True
                 elif keyboard.is_pressed("d"):
                     arduino.write(bytes("d\n", encoding='utf-8'))
                     self.thread.direction = 'd'
                     self.thread.start()
-                else:
+                    moving = True
+                elif moving:
                     arduino.write(bytes("n\n", encoding='utf-8'))
                     self.thread.direction = 'n'
                     self.thread.start()
+                    moving = False
+            line = arduino.readline().decode().rstrip()
+            line_split = line.split(",")
+            if len(line_split) == 2:
+                volt = line_split[0]
+                current = line_split[1]
 
     @QtCore.pyqtSlot(str)
     def move(self, direction):
@@ -113,7 +138,7 @@ class Interface(QMainWindow):
         elif direction == 'front':
             self.forward_movement(self.on_color)
         elif direction == 'back':
-            self.backward_movement(self.on_color)   
+            self.backward_movement(self.on_color)
         elif direction == 'back left':
             self.backward_left_movement(self.on_color)
         elif direction == 'front right':
@@ -121,9 +146,9 @@ class Interface(QMainWindow):
         elif direction == 'back right':
             self.backward_right_movement(self.on_color)
         elif direction == 'stop':
-            self.stop_move_car(self.on_color)        
-    
-    @QtCore.pyqtSlot(np.ndarray)                
+            self.stop_move_car(self.on_color)
+
+    @QtCore.pyqtSlot(np.ndarray)
     def display_image(self, img, window=1):
         qformat = QImage.Format_Indexed8
         if len(img.shape) == 3:
@@ -141,7 +166,7 @@ class Interface(QMainWindow):
         img = img.rgbSwapped()
         self.ui.Cam.setPixmap(QPixmap.fromImage(img))
         self.ui.Cam.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
-    
+
     def capture_video(self):
         cap = cv.VideoCapture(0)
         while cap.isOpened():
@@ -150,11 +175,11 @@ class Interface(QMainWindow):
             self.display_image(frame, 1)
             cv.waitKey()
         cap.release()
-       
+
     def show_stitched(self):
         stitched = StitchDlg(self)
         stitched.exec()
-    
+
     def left_movement(self, color1):
         styleSheet = """
         QFrame{
@@ -164,7 +189,7 @@ class Interface(QMainWindow):
         """
         newStyleSheet = styleSheet.replace("{COLOR}", color1)
         self.ui.Left.setStyleSheet(newStyleSheet)
-    
+
     def right_movement(self, color1):
         styleSheet = """
         QFrame{
@@ -174,7 +199,7 @@ class Interface(QMainWindow):
         """
         newStyleSheet = styleSheet.replace("{COLOR}", color1)
         self.ui.Right.setStyleSheet(newStyleSheet)
-        
+
     def forward_movement(self, color1):
         styleSheet = """
         QFrame{
@@ -183,8 +208,8 @@ class Interface(QMainWindow):
         }
         """
         newStyleSheet = styleSheet.replace("{COLOR}", color1)
-        self.ui.Up.setStyleSheet(newStyleSheet)    
-    
+        self.ui.Up.setStyleSheet(newStyleSheet)
+
     def backward_movement(self, color1):
         styleSheet = """
         QFrame{
@@ -194,7 +219,7 @@ class Interface(QMainWindow):
         """
         newStyleSheet = styleSheet.replace("{COLOR}", color1)
         self.ui.Down.setStyleSheet(newStyleSheet)
-        
+
     def forward_left_movement(self, color1):
         styleSheet = """
         QFrame{
@@ -204,7 +229,7 @@ class Interface(QMainWindow):
         """
         newStyleSheet = styleSheet.replace("{COLOR}", color1)
         self.ui.UpperLeft.setStyleSheet(newStyleSheet)
-        
+
     def forward_right_movement(self, color1):
         styleSheet = """
         QFrame{
@@ -214,7 +239,7 @@ class Interface(QMainWindow):
         """
         newStyleSheet = styleSheet.replace("{COLOR}", color1)
         self.ui.UpperRight.setStyleSheet(newStyleSheet)
-    
+
     def backward_left_movement(self, color1):
         styleSheet = """
         QFrame{
@@ -224,7 +249,7 @@ class Interface(QMainWindow):
         """
         newStyleSheet = styleSheet.replace("{COLOR}", color1)
         self.ui.LowerLeft.setStyleSheet(newStyleSheet)
-        
+
     def backward_right_movement(self, color1):
         styleSheet = """
         QFrame{
@@ -234,7 +259,7 @@ class Interface(QMainWindow):
         """
         newStyleSheet = styleSheet.replace("{COLOR}", color1)
         self.ui.LowerRight.setStyleSheet(newStyleSheet)
-    
+
     def stop_move_car(self, color):
         styleSheet = """
         QFrame{
@@ -252,7 +277,7 @@ class Interface(QMainWindow):
         self.thread.join()
         event.accept()
         sys.exit()
-    
+
     def indicate_connection(self):
         styleSheet = """
         QFrame{
@@ -276,7 +301,7 @@ class Interface(QMainWindow):
         elif self.speed == 3:
             self.mid_speed('#ffff00')
             self.high_speed('red')
-            
+
     def low_speed(self):
         styleSheet = """
         QFrame{
@@ -287,7 +312,7 @@ class Interface(QMainWindow):
         newStyleSheet = styleSheet.replace("{COLOR}", '#00ff00')
         self.ui.LowSpd1.setStyleSheet(newStyleSheet)
         self.ui.LowSpd2.setStyleSheet(newStyleSheet)
-        
+
     def mid_speed(self, color):
         styleSheet = """
         QFrame{
@@ -298,7 +323,7 @@ class Interface(QMainWindow):
         newStyleSheet = styleSheet.replace("{COLOR}", color)
         self.ui.MidSpd1.setStyleSheet(newStyleSheet)
         self.ui.MidSpd2.setStyleSheet(newStyleSheet)
-        
+
     def high_speed(self, color):
         styleSheet = """
         QFrame{
@@ -309,9 +334,10 @@ class Interface(QMainWindow):
         newStyleSheet = styleSheet.replace("{COLOR}", color)
         self.ui.HiSpd1.setStyleSheet(newStyleSheet)
         self.ui.HiSpd2.setStyleSheet(newStyleSheet)
-    
+
+
 class StitchDlg(QDialog):
-    def __init__(self, parent = None):
+    def __init__(self, parent=None):
         super().__init__(parent)
         self.ui = Ui_Stitch()
         self.ui.setupUi(self)
@@ -321,7 +347,7 @@ class StitchDlg(QDialog):
         self.ui.Img3Btn.clicked.connect(lambda: self.choose_file(self.ui.Img3Btn))
         self.ui.Img4Btn.clicked.connect(lambda: self.choose_file(self.ui.Img4Btn))
         self.ui.Img5Btn.clicked.connect(lambda: self.choose_file(self.ui.Img5Btn))
-    
+
     def display_stitched(self):
         img = stitch_images(self.img_locations)
         qformat = QImage.Format_Indexed8
@@ -334,7 +360,7 @@ class StitchDlg(QDialog):
         img = img.rgbSwapped()
         self.ui.Stitched.setPixmap(QPixmap.fromImage(img))
         self.ui.Stitched.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
-        
+
     def choose_file(self, btn):
         img = QFileDialog.getOpenFileName(self, 'open file', '', 'Images (*.jpg)')
         if img:
@@ -342,14 +368,15 @@ class StitchDlg(QDialog):
             btn.setText('FILE SELECTED!')
             if len(self.img_locations) == 5:
                 self.display_stitched()
-                
-                
+
+
 class Worker1(QThread):
     update_direction = pyqtSignal(str)
-    def __init__(self, direction, parent = None):
+
+    def __init__(self, direction, parent=None):
         super(Worker1, self).__init__(parent)
         self.direction = direction
-        
+
     def run(self):
         if keyboard.is_pressed("w") and keyboard.is_pressed("a"):
             self.update_direction.emit('front left')
@@ -370,20 +397,23 @@ class Worker1(QThread):
         else:
             self.update_direction.emit('stop')
 
+
 class Worker2(QThread):
     ImageUpdate = pyqtSignal(np.ndarray)
+
     def run(self):
         cap = cv.VideoCapture(0)
         while cap.isOpened():
             _, frame = cap.read()
             self.ImageUpdate.emit(frame)
         cap.release()
-   
+
+
 if __name__ == "__main__":
     import sys
-    
+
     app = QtWidgets.QApplication(sys.argv)
     interface = Interface()
     interface.show()
-    #interface.capture_video()
+    # interface.capture_video()
     sys.exit(app.exec_())
