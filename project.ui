@@ -496,7 +496,7 @@ QFrame:hover{
      <enum>QFrame::Raised</enum>
     </property>
    </widget>
-   <widget class="QLCDNumber" name="lcdNumber">
+   <widget class="QLCDNumber" name="ALCD">
     <property name="geometry">
      <rect>
       <x>40</x>
@@ -505,8 +505,11 @@ QFrame:hover{
       <height>61</height>
      </rect>
     </property>
+    <property name="value" stdset="0">
+     <double>0.000000000000000</double>
+    </property>
    </widget>
-   <widget class="QLCDNumber" name="lcdNumber_2">
+   <widget class="QLCDNumber" name="VLCD">
     <property name="geometry">
      <rect>
       <x>220</x>

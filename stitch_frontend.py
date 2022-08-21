@@ -28,42 +28,72 @@ class Ui_Stitch(object):
         self.Stitched.setObjectName("Stitched")
         self.Img1Btn = QtWidgets.QPushButton(Stitch)
         self.Img1Btn.setGeometry(QtCore.QRect(60, 40, 131, 71))
+        font = QtGui.QFont()
+        font.setPointSize(11)
+        self.Img1Btn.setFont(font)
         self.Img1Btn.setStyleSheet("QPushButton{\n"
 "    background-color: #ffbe00;\n"
 "    border-radius: 30px;\n"
 "    color: #00365f;\n"
+"}\n"
+"QPushButton:hover{\n"
+"    background-color: #876b1a;\n"
 "}")
         self.Img1Btn.setObjectName("Img1Btn")
         self.Img2Btn = QtWidgets.QPushButton(Stitch)
         self.Img2Btn.setGeometry(QtCore.QRect(60, 140, 131, 71))
+        font = QtGui.QFont()
+        font.setPointSize(11)
+        self.Img2Btn.setFont(font)
         self.Img2Btn.setStyleSheet("QPushButton{\n"
 "    background-color: #ffbe00;\n"
 "    border-radius: 30px;\n"
 "    color: #00365f;\n"
+"}\n"
+"QPushButton:hover{\n"
+"    background-color: #876b1a;\n"
 "}")
         self.Img2Btn.setObjectName("Img2Btn")
         self.Img3Btn = QtWidgets.QPushButton(Stitch)
         self.Img3Btn.setGeometry(QtCore.QRect(60, 230, 131, 71))
+        font = QtGui.QFont()
+        font.setPointSize(11)
+        self.Img3Btn.setFont(font)
         self.Img3Btn.setStyleSheet("QPushButton{\n"
 "    background-color: #ffbe00;\n"
 "    border-radius: 30px;\n"
 "    color: #00365f;\n"
+"}\n"
+"QPushButton:hover{\n"
+"    background-color: #876b1a;\n"
 "}")
         self.Img3Btn.setObjectName("Img3Btn")
         self.Img4Btn = QtWidgets.QPushButton(Stitch)
         self.Img4Btn.setGeometry(QtCore.QRect(60, 320, 131, 71))
+        font = QtGui.QFont()
+        font.setPointSize(11)
+        self.Img4Btn.setFont(font)
         self.Img4Btn.setStyleSheet("QPushButton{\n"
 "    background-color: #ffbe00;\n"
 "    border-radius: 30px;\n"
 "    color: #00365f;\n"
+"}\n"
+"QPushButton:hover{\n"
+"    background-color: #876b1a;\n"
 "}")
         self.Img4Btn.setObjectName("Img4Btn")
         self.Img5Btn = QtWidgets.QPushButton(Stitch)
         self.Img5Btn.setGeometry(QtCore.QRect(60, 410, 131, 71))
+        font = QtGui.QFont()
+        font.setPointSize(11)
+        self.Img5Btn.setFont(font)
         self.Img5Btn.setStyleSheet("QPushButton{\n"
 "    background-color: #ffbe00;\n"
 "    border-radius: 30px;\n"
 "    color: #00365f;\n"
+"}\n"
+"QPushButton:hover{\n"
+"    background-color: #876b1a;\n"
 "}")
         self.Img5Btn.setObjectName("Img5Btn")
 
@@ -72,7 +102,7 @@ class Ui_Stitch(object):
 
     def retranslateUi(self, Stitch):
         _translate = QtCore.QCoreApplication.translate
-        Stitch.setWindowTitle(_translate("Stitch", "Dialog"))
+        Stitch.setWindowTitle(_translate("Stitch", "Stitcher"))
         self.Img1Btn.setText(_translate("Stitch", "Select File!"))
         self.Img2Btn.setText(_translate("Stitch", "Select File!"))
         self.Img3Btn.setText(_translate("Stitch", "Select File!"))
