@@ -43,8 +43,6 @@ class Interface(QMainWindow):
 
     def move2(self):
         arduino = serial.Serial(port='COM17', baudrate=9600, timeout=.1)
-        volt = ""
-        current = ""
         up_press = False
         down_press = False
         moving = False
@@ -114,8 +112,9 @@ class Interface(QMainWindow):
             line = arduino.readline().decode().rstrip()
             line_split = line.split(",")
             if len(line_split) == 2:
-                self.volt = line_split[0]
-                self.current = line_split[1]
+                self.volt = float(line_split[0])
+                self.current = float(line_split[1])
+                self.thread.start()
 
     @QtCore.pyqtSlot(str)
     def move(self, direction):
