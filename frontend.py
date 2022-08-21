@@ -277,12 +277,12 @@ class Ui_MainWindow(object):
 "}")
         self.StchBtn.setIconSize(QtCore.QSize(60, 60))
         self.StchBtn.setObjectName("StchBtn")
-        self.CapBtn_3 = QtWidgets.QPushButton(self.centralwidget)
-        self.CapBtn_3.setGeometry(QtCore.QRect(760, 530, 171, 81))
+        self.StrBtn = QtWidgets.QPushButton(self.centralwidget)
+        self.StrBtn.setGeometry(QtCore.QRect(760, 530, 171, 81))
         font = QtGui.QFont()
         font.setPointSize(14)
-        self.CapBtn_3.setFont(font)
-        self.CapBtn_3.setStyleSheet("QPushButton{\n"
+        self.StrBtn.setFont(font)
+        self.StrBtn.setStyleSheet("QPushButton{\n"
 "    background-color: #ffbe00;\n"
 "    border-radius: 30px;\n"
 "    color: #00365f;\n"
@@ -290,8 +290,8 @@ class Ui_MainWindow(object):
 "QPushButton:hover{\n"
 "    background-color: #876b1a;\n"
 "}")
-        self.CapBtn_3.setIconSize(QtCore.QSize(60, 60))
-        self.CapBtn_3.setObjectName("CapBtn_3")
+        self.StrBtn.setIconSize(QtCore.QSize(60, 60))
+        self.StrBtn.setObjectName("StrBtn")
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(MainWindow)
@@ -303,7 +303,7 @@ class Ui_MainWindow(object):
         self.label.setText(_translate("MainWindow", "A"))
         self.label_2.setText(_translate("MainWindow", "V"))
         self.StchBtn.setText(_translate("MainWindow", "Stitching"))
-        self.CapBtn_3.setText(_translate("MainWindow", "Stereo Vision"))
+        self.StrBtn.setText(_translate("MainWindow", "Stereo Vision"))
 
 
 if __name__ == "__main__":

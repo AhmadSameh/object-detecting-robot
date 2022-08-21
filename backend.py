@@ -1,16 +1,17 @@
-import time
-from PyQt5 import QtWidgets, QtCore
-from PyQt5.QtCore import pyqtSignal, QThread, QRunnable
-from PyQt5.QtWidgets import QMainWindow, QDialog, QFileDialog, QShortcut
-from PyQt5.QtGui import QImage, QPixmap, QKeySequence
+from PyQt5 import QtWidgets, QtCore, QtGui
+from PyQt5.QtCore import pyqtSignal, QThread
+from PyQt5.QtWidgets import QMainWindow, QDialog, QFileDialog
+from PyQt5.QtGui import QImage, QPixmap
 from frontend import Ui_MainWindow
 from stitch_frontend import Ui_Stitch
-import cv2 as cv
+from stereo_frontend import Ui_StereoDialog
 from stitch import stitch_images
+from stereo import stereo_vision
 import threading
 import keyboard
 import serial
 import numpy as np
+import cv2 as cv
 
 class Interface(QMainWindow):
     
@@ -26,6 +27,7 @@ class Interface(QMainWindow):
         self.volt = 0.0
         self.ui.CapBtn.clicked.connect(self.capture_frame)
         self.ui.StchBtn.clicked.connect(self.show_stitched)
+        self.ui.StrBtn.clicked.connect(self.show_stereo)
         self.on_color = 'rgba( 9, 237, 235, 255)'
         self.off_color = 'rgba(0, 88, 174, 255)'
         self.thread2 = threading.Thread(target=self.move2)
@@ -181,6 +183,10 @@ class Interface(QMainWindow):
     def show_stitched(self):
         stitched = StitchDlg(self)
         stitched.exec()
+    
+    def show_stereo(self):
+        stereo = StereoDlg(self)
+        stereo.exec()
     
     def left_movement(self, color1):
         styleSheet = """
@@ -363,12 +369,34 @@ class StitchDlg(QDialog):
         self.ui.Stitched.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
         
     def choose_file(self, btn):
-        img = QFileDialog.getOpenFileName(self, 'open file', '', 'Images (*.jpg)')
+        img = QFileDialog.getOpenFileName(self, 'open file', '', 'Images (*.jpg) (*.png)')
         if img:
             self.img_locations.append(img[0])
             btn.setText('FILE SELECTED!')
             if len(self.img_locations) == 5:
-                self.display_stitched()           
+                self.display_stitched()          
+                
+                
+class StereoDlg(QDialog):
+    def __init__(self, parent = None):
+        super().__init__(parent)
+        self.ui = Ui_StereoDialog()
+        self.ui.setupUi(self)
+        self.img_locations = []
+        self.ui.Img1Btn.clicked.connect(lambda: self.choose_file(self.ui.Img1Btn))
+        self.ui.Img2Btn.clicked.connect(lambda: self.choose_file(self.ui.Img2Btn))
+        
+    def display_img(self):
+        stereo_vision(self.img_locations)
+        self.ui.Img.setPixmap(QtGui.QPixmap('final.png'))
+        
+    def choose_file(self, btn):
+        img = QFileDialog.getOpenFileName(self, 'open file', '', 'Images (*.jpg) (*.png)')
+        if img:
+            self.img_locations.append(img[0])
+            btn.setText('FILE SELECTED!')
+            if len(self.img_locations) == 2:
+                self.display_img()       
                 
 class Worker1(QThread):
     update_direction = pyqtSignal(str)
